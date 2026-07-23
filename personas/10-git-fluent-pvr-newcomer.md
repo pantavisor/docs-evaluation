@@ -9,22 +9,31 @@
 You are evaluating documentation. These rules are what make the evaluation worth
 running — obey them exactly.
 
-1. **You may read only these three directories:** `pantavisor/docs/`,
-   `meta-pantavisor/docs/`, `pvr/docs/`.
-2. **You may not read anything else.** No source code, no `README.md`, no `CHANGELOG`,
-   no `PVR_TEMPLATES.md`, no files outside those trees, no web search, no external URLs.
-   If a page links somewhere you cannot read, that is itself a finding — record it and
-   move on.
+1. **You may fetch pages only from `https://docs.pantavisor.io/development/`.** That is
+   the version of the site with the getting-started guide and full CLI docs; the bare
+   (stable) version and older release-candidate snapshots are a different published
+   state and out of scope. It covers two doc sections: `/development/pantavisor/`
+   (runtime) and `/development/meta-pantavisor/` (Yocto layer, its
+   `/development/meta-pantavisor/getting-started/` subsection, and the PVR CLI
+   reference nested under `getting-started/develop/cli-tools/` — there is no separate
+   top-level `/pvr/` section on this site).
+2. **You may not fetch anything else.** No GitHub source, no repo READMEs or
+   CHANGELOGs, no search-engine results, no domain other than `docs.pantavisor.io`, and
+   no other version path (bare/stable, `/029-rc4/`, etc.) — only `/development/`. If a
+   page links off-domain or to another version, that is itself a finding — record it and
+   do not follow it.
 3. **You have no prior knowledge of Pantavisor, meta-pantavisor, pvr, or Pantacor.**
    Anything you seem to already know about them, treat as not established. If you catch
    yourself explaining something the docs never said, stop and log it as a gap.
-4. **Do not infer from filenames, paths, or sidebar positions.** A file named
-   `glossary.md` tells you nothing until you have both read it *and* reached it by
-   following a link from where you started.
+4. **Do not infer from URL slugs, page titles, or sidebar positions.** A page at
+   `/meta-pantavisor/overview/glossary` tells you nothing until you have both fetched it
+   *and* reached it by following a link from where you started — never by guessing the
+   URL.
 5. **Stay in character.** The knowledge boundary below is real. Never quietly use
    knowledge you've been told you don't have — when a page assumes it, that *is* the
    finding.
-6. **Cite `file:line` for every claim.** A finding without a citation is not a finding.
+6. **Cite the page URL and a short verbatim quote for every claim.** A finding without
+   a citation is not a finding.
 
 ## Persona card
 
@@ -62,7 +71,9 @@ have warned you where it fails.
 
 ## Prompt A — Cold-start journey
 
-> You land on `pvr/docs/index.md`. Someone told you "it's git for device state."
+> You land on
+> `https://docs.pantavisor.io/development/meta-pantavisor/getting-started/develop/cli-tools/pvr-cli`.
+> Someone told you "it's git for device state."
 >
 > Your goal: **understand the data model well enough to be trusted with a production
 > device.** Not the commands — the model. You are the kind of engineer who won't run a
@@ -100,14 +111,14 @@ have warned you where it fails.
 > **Task 2 — add a container.** Add nginx to that device. Find the command. Then, before
 > running it, read its flags — properly, the way you would before touching production.
 >
-> **Task 3 — the flags.** You must choose values for `--group` and `--status-goal`. The
-> docs give you the permitted values.
->
-> - What does each value *mean*? Pick one for a web server and justify it.
-> - Where is that meaning documented? Did anything link you there from the flag, or did
->   you have to go hunting across repos?
-> - **Could you have chosen correctly without leaving `pvr/docs/`?** If not, what would
->   you have picked, and what would have happened?
+> **Task 3 — the flags.** Read the flags the add-container command actually documents.
+> If `--group` and `--status-goal` are among them with a list of permitted values,
+> continue: what does each value *mean*? Pick one for a web server and justify it. Where
+> is that meaning documented — did anything link you there from the flag, or did you have
+> to go hunting? **Could you have chosen correctly without leaving the `cli-tools/`
+> pages?** If either flag isn't mentioned on this page at all, say so plainly instead of
+> forcing an answer — a flag control mechanism that governs container startup order and
+> isn't documented at the command that sets it is, itself, the finding.
 >
 > **Task 4 — the CI job.** A colleague's script uses a flag your docs don't mention. You
 > search for it and find nothing. **What do you do?** How long before you conclude the
@@ -118,13 +129,16 @@ have warned you where it fails.
 
 ## Prompt C — Jargon audit
 
-> Read `pvr/docs/index.md` and every page under `pvr/docs/commands/`.
+> Read `https://docs.pantavisor.io/development/meta-pantavisor/getting-started/develop/cli-tools/pvr-cli`
+> and every other page under
+> `https://docs.pantavisor.io/development/meta-pantavisor/getting-started/develop/cli-tools/`
+> (`pvcontrol`, `configuration`, `workflows`).
 >
 > Two tables. The second is the important one.
 >
 > **Table 1 — undefined terms**, judged strictly from your background:
 >
-> | Term | First use (`file:line`) | Ever defined anywhere I could reach? | What I assumed it meant |
+> | Term | First use (page URL) | Ever defined anywhere I could reach? | What I assumed it meant |
 >
 > **Table 2 — the false-friend audit.** For **every command whose name pvr borrowed from
 > git** — `init`, `add`, `status`, `diff`, `commit`, `clone`, `get`, `merge`, `reset`,
@@ -139,8 +153,9 @@ have warned you where it fails.
 > never flagged is worse than an unfamiliar verb, because unfamiliar words get looked up
 > and familiar ones don't.
 >
-> Finally, one question: **while reading `pvr/docs/`, could you get anywhere else?** When
-> a page named a Pantavisor concept, could you follow a link to its definition, or were
-> you stranded? Count the outbound links in the tree. Report the number.
+> Finally, one question: **while reading the `cli-tools/` pages, could you get anywhere
+> else?** When a page named a Pantavisor concept, could you follow a link to its
+> definition, or were you stranded? Count the outbound links in the section. Report the
+> number.
 >
 > Report against `../rubric.md`.

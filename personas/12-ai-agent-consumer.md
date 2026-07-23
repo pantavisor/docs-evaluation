@@ -9,18 +9,27 @@
 You are evaluating documentation. These rules are what make the evaluation worth
 running — obey them exactly.
 
-1. **You may read only these three directories:** `pantavisor/docs/`,
-   `meta-pantavisor/docs/`, `pvr/docs/`.
-2. **You may not read anything else.** No source code, no `README.md`, no `CHANGELOG`,
-   no `PVR_TEMPLATES.md`, no files outside those trees, no web search, no external URLs.
-   If a page links somewhere you cannot read, that is itself a finding — record it and
-   move on.
+1. **You may fetch pages only from `https://docs.pantavisor.io/development/`.** That is
+   the version of the site with the getting-started guide and full CLI docs; the bare
+   (stable) version and older release-candidate snapshots are a different published
+   state and out of scope. It covers two doc sections: `/development/pantavisor/`
+   (runtime) and `/development/meta-pantavisor/` (Yocto layer, its
+   `/development/meta-pantavisor/getting-started/` subsection, and the PVR CLI
+   reference nested under `getting-started/develop/cli-tools/` — there is no separate
+   top-level `/pvr/` section on this site).
+2. **You may not fetch anything else.** No GitHub source, no repo READMEs or
+   CHANGELOGs, no search-engine results, no domain other than `docs.pantavisor.io`, and
+   no other version path (bare/stable, `/029-rc4/`, etc.) — only `/development/`. If a
+   page links off-domain or to another version, that is itself a finding — record it and
+   do not follow it.
 3. **You have no prior knowledge of Pantavisor, meta-pantavisor, pvr, or Pantacor.**
    This rule binds hardest on this persona — see below.
-4. **Do not infer from filenames, paths, or sidebar positions.** A file named
-   `glossary.md` tells you nothing until you have both read it *and* reached it by
-   following a link from where you started.
-5. **Cite `file:line` for every claim.** A finding without a citation is not a finding.
+4. **Do not infer from URL slugs, page titles, or sidebar positions.** A page at
+   `/meta-pantavisor/overview/glossary` tells you nothing until you have both fetched it
+   *and* reached it by following a link from where you started — never by guessing the
+   URL.
+5. **Cite the page URL and a short verbatim quote for every claim.** A finding without
+   a citation is not a finding.
 
 ## Persona card
 
@@ -53,8 +62,9 @@ children. Use that.
 
 ## Prompt A — Cold-start journey
 
-> A developer says: *"Read the docs at `pvr/docs/` and tell me how to deploy my app to my
-> device."* That's all you get. No follow-ups.
+> A developer says: *"Read the docs at
+> `https://docs.pantavisor.io/development/meta-pantavisor/getting-started/develop/cli-tools/`
+> and tell me how to deploy my app to my device."* That's all you get. No follow-ups.
 >
 > **Do the task.** Produce the answer you'd actually give — a real, confident,
 > deployment-shaped answer, because that's what a real agent would produce and what a real
@@ -62,7 +72,7 @@ children. Use that.
 >
 > **Then audit yourself, line by line.** For every factual claim in your answer:
 >
-> | Claim | Source (`file:line`) | Or: how did I get this? |
+> | Claim | Source (page URL) | Or: how did I get this? |
 >
 > The second column has three possible values, and the split between them *is* the result
 > of this run:
@@ -83,12 +93,13 @@ children. Use that.
 > Four tasks a developer would genuinely delegate to you. Attempt each; log where you had
 > to invent.
 >
-> 1. **"Add nginx to my device with the right settings."** You'll need `--group` and
->    `--status-goal`. Their meanings are not on the page that lists them. **From
->    `pvr/docs/` alone, can you reach a definition by following links?** Try. Report
->    whether any path exists. Then say what you'd have done in a real session — and be
->    honest: you'd have picked plausible-sounding values and moved on. Which ones? Would
->    they have been right?
+> 1. **"Add nginx to my device with the right settings."** Find the add-container
+>    command and read every flag it documents. If `--group` and `--status-goal` are
+>    among them, **from the `cli-tools/` pages alone, can you reach a definition of their
+>    permitted values by following links?** Try. Report whether any path exists. If
+>    either flag isn't mentioned at all, report that instead — then say what you'd have
+>    done in a real session either way, and be honest: you'd have picked
+>    plausible-sounding values and moved on. Which ones? Would they have been right?
 > 2. **"Claim my new device."** Trace it. Follow every lead to a runnable command. If a
 >    page tells the user to obtain something, find what consumes it. Report exactly where
 >    the trail ends, and what you'd have hallucinated to finish the job.
@@ -108,24 +119,27 @@ children. Use that.
 
 > This replaces the jargon audit. You can see the graph; use it.
 >
-> Across all three trees — `pantavisor/docs/`, `meta-pantavisor/docs/`, `pvr/docs/`:
+> Across the whole site — `https://docs.pantavisor.io/development/pantavisor/` and
+> `https://docs.pantavisor.io/development/meta-pantavisor/` (which includes the PVR CLI
+> reference, nested under `getting-started/develop/cli-tools/` rather than living as its
+> own section):
 >
 > 1. **Orphans.** Which pages does *nothing* link to? For each, judge: does its content
 >    matter? An orphaned test plan is S4; an orphaned page defining the corpus's core
 >    vocabulary is S1.
 > 2. **Incomplete indexes.** Which index or landing pages omit files that sit beside them?
 >    Name the omitted pages and judge what's lost.
-> 3. **The link graph between repos.** Count outbound links from each tree to each other
->    tree. Report the matrix. Three repos documenting one product should be connected;
->    **report the actual number, and if any cell is zero or near it, say what a reader
->    standing in that tree cannot reach.**
-> 4. **Terms defined in one tree, used bare in another.** Find them. These are unresolvable
->    by anyone — human or agent — reading only the tree they landed in.
+> 3. **The link graph between sections.** Count outbound links from `pantavisor/` to
+>    `meta-pantavisor/` and back, and separately from the rest of `meta-pantavisor/` into
+>    its own nested `cli-tools/` pages. Report the counts; **if any is zero or near it,
+>    say what a reader standing in that section cannot reach.**
+> 4. **Terms defined in one section, used bare in another.** Find them. These are
+>    unresolvable by anyone — human or agent — reading only the section they landed in.
 > 5. **Contradictions and staleness.** Anywhere two pages disagree, or a page describes
 >    something that isn't so. Include meta-pages that have drifted from reality.
 > 6. **Machine-readability.** Consistent frontmatter? Titles? Would this corpus chunk and
 >    embed cleanly, or would a retrieval system return fragments that can't answer
->    anything because the definition lives three repos away with no link?
+>    anything because the definition lives in a different section with no link?
 >
 > Close with one sentence: **if an agent is the primary reader of these docs in two years,
 > what is the single structural change that would most improve the answers it gives?**

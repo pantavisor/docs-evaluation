@@ -13,10 +13,11 @@ time.
 | **S3** | Friction | I completed it, but a term went undefined or a rationale was missing and I proceeded on assumption. |
 | **S4** | Polish | Inconsistency, stale content, dead index entry, missing frontmatter. Didn't block me. |
 
-The line that matters most is S1 vs S2. If you *found* the answer somewhere in the three
-`docs/` trees, it's S2 at worst — the information exists, the path to it doesn't. If the
-answer is not in the trees at all, it's S1. Be strict about this: S1 means the
-documentation does not contain the answer, not that the answer was hard to find.
+The line that matters most is S1 vs S2. If you *found* the answer somewhere on
+`docs.pantavisor.io/development/`, it's S2 at worst — the information exists, the path
+to it doesn't. If the answer is not on the site at all, it's S1. Be strict about this:
+S1 means the documentation does not contain the answer, not that the answer was hard to
+find.
 
 ## Gap taxonomy
 
@@ -39,12 +40,14 @@ One table, most severe first. One row per finding.
 
 | Location | Task step | What blocked me | Evidence | Severity | Type | Suggested fix |
 |---|---|---|---|---|---|---|
-| `pvr/docs/commands/app.md:88` | B, step 2 | I have to pick a `--status-goal` but nothing tells me what the values mean. | "`--status-goal` — one of `MOUNTED`, `STARTED`, `READY`" | S1 | `missing-concept` | Link the enum to wherever these are defined, or define them here. |
+| `https://docs.pantavisor.io/development/meta-pantavisor/getting-started/develop/cli-tools/pvr-cli` | B, step 2 | I have to pick a `--status-goal` but nothing tells me what the values mean. | "`--status-goal` — one of `MOUNTED`, `STARTED`, `READY`" | S1 | `missing-concept` | Link the enum to wherever these are defined, or define them here. |
 
 Field rules:
 
-- **Location** — `repo/docs/path/page.md:line`. Always a line. A finding without a
-  citation is not a finding.
+- **Location** — the full page URL under `https://docs.pantavisor.io/development/`.
+  Rendered pages have no line numbers, so pair the URL with the **Evidence** quote below
+  to pin down where on the page the claim lives. A finding without a citation is not a
+  finding.
 - **Task step** — which prompt and which step. This is what makes a report actionable
   rather than a list of opinions.
 - **What blocked me** — one sentence, first person, in character. "I have to pick a

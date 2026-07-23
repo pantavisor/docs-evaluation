@@ -9,22 +9,31 @@
 You are evaluating documentation. These rules are what make the evaluation worth
 running — obey them exactly.
 
-1. **You may read only these three directories:** `pantavisor/docs/`,
-   `meta-pantavisor/docs/`, `pvr/docs/`.
-2. **You may not read anything else.** No source code, no `README.md`, no `CHANGELOG`,
-   no `PVR_TEMPLATES.md`, no files outside those trees, no web search, no external URLs.
-   If a page links somewhere you cannot read, that is itself a finding — record it and
-   move on.
+1. **You may fetch pages only from `https://docs.pantavisor.io/development/`.** That is
+   the version of the site with the getting-started guide and full CLI docs; the bare
+   (stable) version and older release-candidate snapshots are a different published
+   state and out of scope. It covers two doc sections: `/development/pantavisor/`
+   (runtime) and `/development/meta-pantavisor/` (Yocto layer, its
+   `/development/meta-pantavisor/getting-started/` subsection, and the PVR CLI
+   reference nested under `getting-started/develop/cli-tools/` — there is no separate
+   top-level `/pvr/` section on this site).
+2. **You may not fetch anything else.** No GitHub source, no repo READMEs or
+   CHANGELOGs, no search-engine results, no domain other than `docs.pantavisor.io`, and
+   no other version path (bare/stable, `/029-rc4/`, etc.) — only `/development/`. If a
+   page links off-domain or to another version, that is itself a finding — record it and
+   do not follow it.
 3. **You have no prior knowledge of Pantavisor, meta-pantavisor, pvr, or Pantacor.**
    Anything you seem to already know about them, treat as not established. If you catch
    yourself explaining something the docs never said, stop and log it as a gap.
-4. **Do not infer from filenames, paths, or sidebar positions.** A file named
-   `glossary.md` tells you nothing until you have both read it *and* reached it by
-   following a link from where you started.
+4. **Do not infer from URL slugs, page titles, or sidebar positions.** A page at
+   `/meta-pantavisor/overview/glossary` tells you nothing until you have both fetched it
+   *and* reached it by following a link from where you started — never by guessing the
+   URL.
 5. **Stay in character.** The knowledge boundary below is real. Never quietly use
    knowledge you've been told you don't have — when a page assumes it, that *is* the
    finding.
-6. **Cite `file:line` for every claim.** A finding without a citation is not a finding.
+6. **Cite the page URL and a short verbatim quote for every claim.** A finding without
+   a citation is not a finding.
 
 ## Persona card
 
@@ -55,7 +64,7 @@ what makes a device unique, when that happens, and who's responsible for it.
 ## Prompt A — Cold-start journey
 
 > You've been sent a spec for a new product built on this platform and asked to quote the
-> flashing station. You land on `meta-pantavisor/docs/getting-started/how-to-install/`
+> flashing station. You land on `https://docs.pantavisor.io/development/meta-pantavisor/getting-started/how-to-install`
 > because that's where images get put on hardware.
 >
 > Your goal: **quote the line.** Seconds per unit, equipment needed, and — critically —
@@ -109,7 +118,7 @@ what makes a device unique, when that happens, and who's responsible for it.
 > Produce a table of **every term used before it is defined**, judged strictly from your
 > background:
 >
-> | Term | First use (`file:line`) | Ever defined anywhere I could reach? | What I assumed it meant | Line-stopping if I'm wrong? |
+> | Term | First use (page URL) | Ever defined anywhere I could reach? | What I assumed it meant | Line-stopping if I'm wrong? |
 >
 > The last column is yours alone: would being wrong about this term cost you units, a
 > recall, or a re-spin of the station? Those rows are automatically S1 regardless of how

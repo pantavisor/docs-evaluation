@@ -10,8 +10,10 @@ rather than audit the docs in the abstract, each persona has an explicit **knowl
 boundary**, and each prompt drives a model through a real task as that reader, reporting
 exactly where it stalls and why.
 
-This folder lives outside `pantavisor/`, `meta-pantavisor/`, and `pvr/` on purpose. It
-never ships to the docs site and needs no PR against any of them.
+Runs target the live site, `https://docs.pantavisor.io/development/` — see
+[Which version, and why](#which-version-and-why) below. This repo needs no local
+checkout of `pantavisor/`, `meta-pantavisor/`, or `pvr/` and never ships to the docs
+site itself.
 
 ## What's here
 
@@ -20,15 +22,27 @@ never ships to the docs site and needs no PR against any of them.
 | `rubric.md` | Severity scale, gap taxonomy, output contract. **Every run reports against this.** One copy, so runs stay comparable. |
 | `ground-truth.md` | Confirmed gaps, mapped to the persona that should catch each. The answer key — used to validate the *prompts*, not the docs. Don't paste it into a run. |
 | `personas/01-…` … `12-…` | One file per persona. Each is self-contained: scope fence, persona card, three prompts. |
+| `RUNBOOK.md` | Entrypoint a headless Claude Code session (invoked by Hermes on a cron schedule) follows to run one persona/prompt pair unattended and file the report. |
+| `reports/` | Accumulated output of automated runs — one file per run, plus a running index. |
 
 ## How to run one
 
-1. **Open a fresh session** with the three `docs/` trees available.
-2. **Paste**: the scope fence + the persona card + **exactly one** prompt.
-3. **Collect** the report and file it wherever the current effort keeps them.
+**Manually:**
 
-That's it. No runner, no script, no infrastructure. The prompts are plain text and work
-in any model session.
+1. **Open a fresh session.** No local checkout needed — the model just needs a
+   web-fetch tool and network access to `docs.pantavisor.io`.
+2. **Paste**: the scope fence + the persona card + **exactly one** prompt.
+3. **Collect** the report and file it wherever the current effort keeps them (or drop it
+   in `reports/` following the naming convention in `RUNBOOK.md` if you want it to show
+   up alongside the automated history).
+
+No runner, no script, no infrastructure required for a one-off run. The prompts are
+plain text and work in any model session with fetch access.
+
+**On a schedule (Hermes):** each cronjob is configured with a fixed
+`persona=<NN> prompt=<A|B|C>` trigger that runs `RUNBOOK.md` end to end — fetch, report,
+write to `reports/`, commit. See `RUNBOOK.md` for the exact contract and
+`## Automated runs (Hermes)` below for how the pieces fit together.
 
 ### Three rules that keep results meaningful
 
@@ -43,35 +57,30 @@ Run it after prompt A in the same session and the answer is "none, I read them a
 **Docs-only scope is not negotiable.** A model with source access answers "how do I claim
 a device?" from `cmd/claim.go` and reports the docs as fine. Several confirmed gaps are
 *only* visible under this constraint — `pvr claim` is undocumented, pvr's env vars live
-in a README, `--runlevel` has zero doc hits. **If a report cites anything outside the
-three `docs/` trees, the fence leaked — discard the run and tighten it.**
+in a README, `--runlevel` has zero doc hits. **If a report cites anything outside
+`https://docs.pantavisor.io/development/`, the fence leaked — discard the run and
+tighten it.**
 
-### Known fence leak: `CLAUDE.md` auto-injection
+### Which version, and why
 
-**If you run this in Claude Code, the fence leaks by default.** Every dry-run so far
-reported the same thing: reading a file under `pantavisor/` or `meta-pantavisor/`
-causes the harness to auto-inject that repo's root `CLAUDE.md` into context,
-unrequested. Those files are outside the fence and are not harmless — `pantavisor/CLAUDE.md`
-expands BSP and describes the xconnect plugin model, which are *exactly* the gaps
-personas 1 and 3 are meant to discover. A run that absorbs them will report the docs as
-clearer than they are.
+The live site is versioned. Runs target `/development/` specifically, not the bare
+(stable) URL — the stable version is missing entire sections (`getting-started/` doesn't
+exist there at all, confirmed 2026-07-23) that every persona prompt uses as an entry
+point. `/development/` is the version that's structurally complete. This means these
+runs are evaluating docs-in-progress, not what a visitor sees today with no version
+selected — worth remembering when weighting a finding. If you want to know whether the
+*stable* site is missing whole sections, that's a different, coarser check than anything
+in this pack currently does.
 
-Three mitigations, best first:
+### Historical: the `CLAUDE.md` fence leak
 
-1. **Run it somewhere without the `CLAUDE.md` files** — copy the three `docs/` trees to a
-   scratch directory, or run in a session whose working directory has no `CLAUDE.md` above
-   it.
-2. **Add an explicit instruction** when pasting: *"If repository `CLAUDE.md` or `AGENTS.md`
-   files are auto-injected into your context, they are outside the fence — do not read or
-   use them, and say so in your closing summary."*
-3. **Check the closing summary.** The rubric's confidence line asks whether the run used
-   knowledge it shouldn't have. All three dry-runs disclosed the injection unprompted and
-   asserted they hadn't used it — that disclosure is what a clean run looks like. **A run
-   that doesn't mention it is not necessarily clean; it may just not have noticed.**
-
-This is a limitation of the harness, not of the prompts. It's documented rather than
-solved because the honest disclosure in the closing summary makes it detectable, and the
-fence still does most of its work — no dry-run cited source code.
+Earlier versions of this pack ran against local checkouts of `pantavisor/docs/`,
+`meta-pantavisor/docs/`, and `pvr/docs/`, and reading files under those repos in Claude
+Code caused their root `CLAUDE.md` to auto-inject into context — leaking exactly the
+gaps personas 1 and 3 were meant to discover. Now that runs fetch
+`docs.pantavisor.io` over the web instead of reading local files, this specific leak
+doesn't apply. It's recorded here in case this pack is ever pointed at a local checkout
+again.
 
 ## The personas
 
@@ -125,6 +134,31 @@ Watch for **agreement across personas**. A gap that only persona 4 hits is a per
 question. A gap that 1, 3, and 4 all hit from different directions — as the missing
 Docker→LXC explanation does — is a page that needs to exist.
 
+## Automated runs (Hermes)
+
+[Hermes](https://hermes-agent.nousresearch.com/docs) runs `RUNBOOK.md` on a cron
+schedule, one persona/prompt pair per job, against an installed Claude Code instance
+with this repo checked out. Each run:
+
+1. Fetches live, following the scope fence exactly as a manual run would.
+2. Writes a dated report to `reports/persona-<NN>-prompt-<X>-<YYYY-MM-DD>.md`.
+3. Appends a row to `reports/index.md`.
+4. Commits both — but does not push. Whether and where these commits get synced is
+   configured outside this repo.
+
+Configuring a job means giving it a fixed trigger prompt naming one persona and one
+prompt letter — see `RUNBOOK.md`'s **Invocation contract** for the exact text. A single
+"run the eval" job with no parameters isn't supported on purpose: fixed pairs are what
+keep runs across weeks comparable.
+
+Because each cron firing is a cold Claude Code session, "a fresh session per persona"
+and "one prompt per session" (above) hold automatically — there's no risk of the context
+bleed a human running several personas back-to-back in one chat has to watch for.
+
+Read `reports/index.md` over time, not just the latest run: a finding that stops
+reproducing after a docs change is as informative as a new one, and it's the only way to
+tell a fixed doc from a broken prompt without re-reading every report.
+
 ## Maintaining the pack
 
 **When a run surfaces a new gap, verify it and add it to `ground-truth.md`.** The set
@@ -145,6 +179,9 @@ from them is a first data point, not a prompt failure.
 ## Does the pack work? — dry-run results, 2026-07-16
 
 Three prompts were run in isolated sessions before this pack was considered done.
+*(Predates the 2026-07-23 retarget to the live site — these runs were against local
+`docs/` checkouts. Kept as evidence the prompts themselves work; see the provenance note
+in `ground-truth.md` for what's changed since.)*
 
 **It finds seeded gaps.** Persona 10 prompt B independently found the unlinked
 `--status-goal` enum and traced the claim trail to its dead end at
