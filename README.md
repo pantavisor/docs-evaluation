@@ -96,6 +96,37 @@ per prompt, so the persona ends up with a full comparable set:
 | B — Targeted task | Cross-repo task gaps | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=B"` |
 | C — Jargon audit | Undefined or misread terms | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=C"` |
 
+**Full command reference — every persona, every prompt.** All 36 combinations follow
+the same template:
+
+```bash
+claude -p --permission-mode acceptEdits \
+  "Follow RUNBOOK.md in the docs-eval repo. <args>"
+```
+
+— substitute the `<args>` from the matching cell below. Core set (1–10) is the general
+pass; extended set (11–12) is for auditing provisioning and machine-readability
+specifically (see "The personas" below for what each boundary means).
+
+| # | Persona | Prompt A `<args>` | Prompt B `<args>` | Prompt C `<args>` |
+|---|---|---|---|---|
+| 01 | Yocto integrator, no containers | `persona=01 prompt=A` | `persona=01 prompt=B` | `persona=01 prompt=C` |
+| 02 | Buildroot engineer, no Yocto, no containers | `persona=02 prompt=A` | `persona=02 prompt=B` | `persona=02 prompt=C` |
+| 03 | Cloud-native dev, no embedded | `persona=03 prompt=A` | `persona=03 prompt=B` | `persona=03 prompt=C` |
+| 04 | App developer targeting a Pi | `persona=04 prompt=A` | `persona=04 prompt=B` | `persona=04 prompt=C` |
+| 05 | OTA engineer migrating off Mender/RAUC | `persona=05 prompt=A` | `persona=05 prompt=B` | `persona=05 prompt=C` |
+| 06 | BSP bring-up engineer | `persona=06 prompt=A` | `persona=06 prompt=B` | `persona=06 prompt=C` |
+| 07 | Security reviewer | `persona=07 prompt=A` | `persona=07 prompt=B` | `persona=07 prompt=C` |
+| 08 | Adoption evaluator (tech lead) | `persona=08 prompt=A` | `persona=08 prompt=B` | `persona=08 prompt=C` |
+| 09 | Field support operator | `persona=09 prompt=A` | `persona=09 prompt=B` | `persona=09 prompt=C` |
+| 10 | Git-fluent dev meeting pvr | `persona=10 prompt=A` | `persona=10 prompt=B` | `persona=10 prompt=C` |
+| 11 | Manufacturing / provisioning engineer | `persona=11 prompt=A` | `persona=11 prompt=B` | `persona=11 prompt=C` |
+| 12 | AI agent consumer | `persona=12 prompt=A` | `persona=12 prompt=B` | `persona=12 prompt=C` |
+
+Append ` version=stable` (or any other published version tag) to an `<args>` cell to
+run that same combination against a different site version — see "Which version, and
+why" below.
+
 **Watching progress while it runs.** Plain `claude -p` prints nothing until the run
 finishes, which is a long silence for a task that's fetching several pages and writing a
 report. Add streaming flags to watch it work:
