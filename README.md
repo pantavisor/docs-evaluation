@@ -96,36 +96,51 @@ per prompt, so the persona ends up with a full comparable set:
 | B — Targeted task | Cross-repo task gaps | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=B"` |
 | C — Jargon audit | Undefined or misread terms | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=C"` |
 
-**Full command reference — every persona, every prompt.** All 36 combinations follow
-the same template:
+**Full command reference — every persona, every prompt.** All 36 ready-to-paste
+commands. Core set (1–10) is the general pass; extended set (11–12) is for auditing
+provisioning and machine-readability specifically (see "The personas" below for what
+each boundary means). Append ` version=stable` (or any other published version tag)
+before the closing quote to run that same combination against a different site version
+— see "Which version, and why" below.
 
-```bash
-claude -p --permission-mode acceptEdits \
-  "Follow RUNBOOK.md in the docs-eval repo. <args>"
-```
-
-— substitute the `<args>` from the matching cell below. Core set (1–10) is the general
-pass; extended set (11–12) is for auditing provisioning and machine-readability
-specifically (see "The personas" below for what each boundary means).
-
-| # | Persona | Prompt A `<args>` | Prompt B `<args>` | Prompt C `<args>` |
-|---|---|---|---|---|
-| 01 | Yocto integrator, no containers | `persona=01 prompt=A` | `persona=01 prompt=B` | `persona=01 prompt=C` |
-| 02 | Buildroot engineer, no Yocto, no containers | `persona=02 prompt=A` | `persona=02 prompt=B` | `persona=02 prompt=C` |
-| 03 | Cloud-native dev, no embedded | `persona=03 prompt=A` | `persona=03 prompt=B` | `persona=03 prompt=C` |
-| 04 | App developer targeting a Pi | `persona=04 prompt=A` | `persona=04 prompt=B` | `persona=04 prompt=C` |
-| 05 | OTA engineer migrating off Mender/RAUC | `persona=05 prompt=A` | `persona=05 prompt=B` | `persona=05 prompt=C` |
-| 06 | BSP bring-up engineer | `persona=06 prompt=A` | `persona=06 prompt=B` | `persona=06 prompt=C` |
-| 07 | Security reviewer | `persona=07 prompt=A` | `persona=07 prompt=B` | `persona=07 prompt=C` |
-| 08 | Adoption evaluator (tech lead) | `persona=08 prompt=A` | `persona=08 prompt=B` | `persona=08 prompt=C` |
-| 09 | Field support operator | `persona=09 prompt=A` | `persona=09 prompt=B` | `persona=09 prompt=C` |
-| 10 | Git-fluent dev meeting pvr | `persona=10 prompt=A` | `persona=10 prompt=B` | `persona=10 prompt=C` |
-| 11 | Manufacturing / provisioning engineer | `persona=11 prompt=A` | `persona=11 prompt=B` | `persona=11 prompt=C` |
-| 12 | AI agent consumer | `persona=12 prompt=A` | `persona=12 prompt=B` | `persona=12 prompt=C` |
-
-Append ` version=stable` (or any other published version tag) to an `<args>` cell to
-run that same combination against a different site version — see "Which version, and
-why" below.
+| # | Persona | Prompt | Command |
+|---|---|---|---|
+| 01 | Yocto integrator, no containers | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A"` |
+| 01 | Yocto integrator, no containers | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=B"` |
+| 01 | Yocto integrator, no containers | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=C"` |
+| 02 | Buildroot engineer, no Yocto, no containers | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=02 prompt=A"` |
+| 02 | Buildroot engineer, no Yocto, no containers | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=02 prompt=B"` |
+| 02 | Buildroot engineer, no Yocto, no containers | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=02 prompt=C"` |
+| 03 | Cloud-native dev, no embedded | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=03 prompt=A"` |
+| 03 | Cloud-native dev, no embedded | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=03 prompt=B"` |
+| 03 | Cloud-native dev, no embedded | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=03 prompt=C"` |
+| 04 | App developer targeting a Pi | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=04 prompt=A"` |
+| 04 | App developer targeting a Pi | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=04 prompt=B"` |
+| 04 | App developer targeting a Pi | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=04 prompt=C"` |
+| 05 | OTA engineer migrating off Mender/RAUC | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=05 prompt=A"` |
+| 05 | OTA engineer migrating off Mender/RAUC | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=05 prompt=B"` |
+| 05 | OTA engineer migrating off Mender/RAUC | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=05 prompt=C"` |
+| 06 | BSP bring-up engineer | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=06 prompt=A"` |
+| 06 | BSP bring-up engineer | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=06 prompt=B"` |
+| 06 | BSP bring-up engineer | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=06 prompt=C"` |
+| 07 | Security reviewer | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=07 prompt=A"` |
+| 07 | Security reviewer | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=07 prompt=B"` |
+| 07 | Security reviewer | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=07 prompt=C"` |
+| 08 | Adoption evaluator (tech lead) | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=08 prompt=A"` |
+| 08 | Adoption evaluator (tech lead) | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=08 prompt=B"` |
+| 08 | Adoption evaluator (tech lead) | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=08 prompt=C"` |
+| 09 | Field support operator | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=09 prompt=A"` |
+| 09 | Field support operator | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=09 prompt=B"` |
+| 09 | Field support operator | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=09 prompt=C"` |
+| 10 | Git-fluent dev meeting pvr | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=10 prompt=A"` |
+| 10 | Git-fluent dev meeting pvr | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=10 prompt=B"` |
+| 10 | Git-fluent dev meeting pvr | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=10 prompt=C"` |
+| 11 | Manufacturing / provisioning engineer | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=11 prompt=A"` |
+| 11 | Manufacturing / provisioning engineer | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=11 prompt=B"` |
+| 11 | Manufacturing / provisioning engineer | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=11 prompt=C"` |
+| 12 | AI agent consumer | A | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=12 prompt=A"` |
+| 12 | AI agent consumer | B | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=12 prompt=B"` |
+| 12 | AI agent consumer | C | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=12 prompt=C"` |
 
 **Watching progress while it runs.** Plain `claude -p` prints nothing until the run
 finishes, which is a long silence for a task that's fetching several pages and writing a
