@@ -56,27 +56,45 @@ paths in `RUNBOOK.md` resolve. Each invocation is one persona/prompt (/version)
 combination and writes its own report under `answers/` — see `RUNBOOK.md` for exactly
 what it does at each step.
 
+`RUNBOOK.md`'s later steps write a report file and commit it, so these examples pass
+`--permission-mode acceptEdits` to let the session write to `answers/` and run `git
+commit` without stopping to ask — swap in whatever your Claude Code setup uses to skip
+interactive prompts if that's not it. Without some form of this, the run stalls asking
+for permission the moment it tries to write the report file.
+
 ```bash
 # Core pass: persona 01 (Yocto, no containers), prompt A (cold-start journey),
 # default version (development).
-claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A"
+claude -p --permission-mode acceptEdits \
+  "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A"
 
 # Same pair, but against a different published version of the site.
-claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A version=stable"
+claude -p --permission-mode acceptEdits \
+  "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A version=stable"
 
 # Security reviewer, targeted-task prompt — a good smoke test since persona 07
 # has no seeded ground-truth gaps yet, so a thin report is expected, not a bug.
-claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=07 prompt=B"
+claude -p --permission-mode acceptEdits \
+  "Follow RUNBOOK.md in the docs-eval repo. persona=07 prompt=B"
 
 # Git-fluent pvr newcomer, jargon audit — the densest ground-truth lane, good for
 # checking the pack still finds what it's supposed to after a docs change.
-claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=10 prompt=C"
+claude -p --permission-mode acceptEdits \
+  "Follow RUNBOOK.md in the docs-eval repo. persona=10 prompt=C"
 ```
 
-`RUNBOOK.md`'s later steps write a report file and commit it, so give the session
-permission to edit files and run git in this repo (e.g. `claude -p --permission-mode
-acceptEdits "..."`, or whatever your Claude Code setup uses to skip the interactive
-prompts) — otherwise it'll stall asking to write `answers/...` and run `git commit`.
+**Example: all three prompts for one persona.** A full pass on a persona means three
+separate `claude -p` invocations, one per prompt letter — never one script looping
+in-process, since each prompt still needs its own cold session (see "One prompt per
+session" below; the rule applies to `claude -p` exactly as it does to a pasted-in
+session). All three land in the same `answers/01-yocto-no-containers/` folder, one file
+per prompt, so the persona ends up with a full comparable set:
+
+| Prompt | What it tests | Command |
+|---|---|---|
+| A — Cold-start journey | Onboarding and pathing gaps | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A"` |
+| B — Targeted task | Cross-repo task gaps | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=B"` |
+| C — Jargon audit | Undefined or misread terms | `claude -p --permission-mode acceptEdits "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=C"` |
 
 **Watching progress while it runs.** Plain `claude -p` prints nothing until the run
 finishes, which is a long silence for a task that's fetching several pages and writing a
