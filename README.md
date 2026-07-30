@@ -10,10 +10,10 @@ rather than audit the docs in the abstract, each persona has an explicit **knowl
 boundary**, and each prompt drives a model through a real task as that reader, reporting
 exactly where it stalls and why.
 
-Runs target the live site, `https://docs.pantavisor.io/development/` — see
-[Which version, and why](#which-version-and-why) below. This repo needs no local
-checkout of `pantavisor/`, `meta-pantavisor/`, or `pvr/` and never ships to the docs
-site itself.
+Runs target the live site, `https://docs.pantavisor.io/development/` by default — see
+[Which version, and why](#which-version-and-why) below for what that means and how to
+point a run at a different published version instead. This repo needs no local checkout
+of `pantavisor/`, `meta-pantavisor/`, or `pvr/` and never ships to the docs site itself.
 
 ## What's here
 
@@ -21,9 +21,9 @@ site itself.
 |---|---|
 | `rubric.md` | Severity scale, gap taxonomy, output contract. **Every run reports against this.** One copy, so runs stay comparable. |
 | `ground-truth.md` | Confirmed gaps, mapped to the persona that should catch each. The answer key — used to validate the *prompts*, not the docs. Don't paste it into a run. |
-| `personas/01-…` … `12-…` | One file per persona. Each is self-contained: scope fence, persona card, three prompts. |
-| `RUNBOOK.md` | Entrypoint a headless Claude Code session (invoked by Hermes on a cron schedule) follows to run one persona/prompt pair unattended and file the report. |
-| `reports/` | Accumulated output of automated runs — one file per run, plus a running index. |
+| `personas/01-yocto-no-containers/` … `12-ai-agent-consumer/` | One folder per persona: `persona.md` (scope fence + persona card) plus `promptA.md`, `promptB.md`, `promptC.md`. |
+| `RUNBOOK.md` | Entrypoint an unattended or semi-attended Claude Code session (a cron job, `claude -p`, or similar) follows to run one persona/prompt pair and file the report. |
+| `answers/` | Accumulated output of runs filed through `RUNBOOK.md` — one flat file per run under `<NN>-<persona-slug>/`, mirroring `personas/`, plus a running index. |
 
 ## How to run one
 
@@ -31,18 +31,89 @@ site itself.
 
 1. **Open a fresh session.** No local checkout needed — the model just needs a
    web-fetch tool and network access to `docs.pantavisor.io`.
-2. **Paste**: the scope fence + the persona card + **exactly one** prompt.
+2. **Paste**: `personas/<NN>-<slug>/persona.md` + **exactly one** of
+   `promptA.md` / `promptB.md` / `promptC.md` from that same folder. Both files use a
+   `{VERSION}` placeholder that resolves to `development` unless you say otherwise — see
+   [Which version, and why](#which-version-and-why) if you want a different one.
 3. **Collect** the report and file it wherever the current effort keeps them (or drop it
-   in `reports/` following the naming convention in `RUNBOOK.md` if you want it to show
-   up alongside the automated history).
+   in `answers/<NN>-<slug>/` following the naming convention in `RUNBOOK.md`
+   if you want it to show up alongside the accumulated history).
 
 No runner, no script, no infrastructure required for a one-off run. The prompts are
 plain text and work in any model session with fetch access.
 
-**On a schedule (Hermes):** each cronjob is configured with a fixed
-`persona=<NN> prompt=<A|B|C>` trigger that runs `RUNBOOK.md` end to end — fetch, report,
-write to `reports/`, commit. See `RUNBOOK.md` for the exact contract and
-`## Automated runs (Hermes)` below for how the pieces fit together.
+**Unattended (any runner):** each trigger names a fixed `persona=<NN> prompt=<A|B|C>`
+pair, optionally with `version=<VERSION>` (defaults to `development`), and runs
+`RUNBOOK.md` end to end — fetch, report, write to `answers/`, commit. This works the
+same whether the trigger is a Hermes cron job, a `claude -p "..."` invocation, or a CI
+job — `RUNBOOK.md` doesn't assume a specific runner. See `RUNBOOK.md` for the exact
+contract and `## Automated / unattended runs` below for how the pieces fit together.
+
+### Example: running a test from the command line
+
+The quickest way to try the pack is `claude -p`, run from the repo root so the relative
+paths in `RUNBOOK.md` resolve. Each invocation is one persona/prompt (/version)
+combination and writes its own report under `answers/` — see `RUNBOOK.md` for exactly
+what it does at each step.
+
+```bash
+# Core pass: persona 01 (Yocto, no containers), prompt A (cold-start journey),
+# default version (development).
+claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A"
+
+# Same pair, but against a different published version of the site.
+claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A version=stable"
+
+# Security reviewer, targeted-task prompt — a good smoke test since persona 07
+# has no seeded ground-truth gaps yet, so a thin report is expected, not a bug.
+claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=07 prompt=B"
+
+# Git-fluent pvr newcomer, jargon audit — the densest ground-truth lane, good for
+# checking the pack still finds what it's supposed to after a docs change.
+claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=10 prompt=C"
+```
+
+`RUNBOOK.md`'s later steps write a report file and commit it, so give the session
+permission to edit files and run git in this repo (e.g. `claude -p --permission-mode
+acceptEdits "..."`, or whatever your Claude Code setup uses to skip the interactive
+prompts) — otherwise it'll stall asking to write `answers/...` and run `git commit`.
+
+**Watching progress while it runs.** Plain `claude -p` prints nothing until the run
+finishes, which is a long silence for a task that's fetching several pages and writing a
+report. Add streaming flags to watch it work:
+
+```bash
+claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A" \
+  --output-format stream-json --verbose --include-partial-messages
+```
+
+This emits newline-delimited JSON events (text as it's generated, each tool call, API
+retries) instead of waiting silently for the final result. The output is raw JSON, not
+prose — pipe it through `jq` to watch just the generated text, for example:
+
+```bash
+claude -p "Follow RUNBOOK.md in the docs-eval repo. persona=01 prompt=A" \
+  --output-format stream-json --verbose --include-partial-messages | \
+  jq -rj 'select(.type == "stream_event" and .event.delta.type? == "text_delta") | .event.delta.text'
+```
+
+`--include-partial-messages` is what gives token-by-token streaming — without it you
+only see each message once it's complete. Skip these flags for a normal run; they're
+only worth the extra noise when you actually want to watch a `RUNBOOK.md` invocation
+fetch pages and write its report live.
+
+To try a single prompt without going through `RUNBOOK.md` at all — no report file, just
+the model's raw output in your terminal — pass the persona card and one prompt straight
+in:
+
+```bash
+claude -p "$(cat personas/01-yocto-no-containers/persona.md) \
+$(cat personas/01-yocto-no-containers/promptA.md)"
+```
+
+That's the same "paste into a fresh session" flow as the manual steps above, just fed in
+from the shell instead of pasted by hand — useful for a quick check that a prompt still
+reads sensibly, without touching `answers/` or git at all.
 
 ### Three rules that keep results meaningful
 
@@ -58,19 +129,53 @@ Run it after prompt A in the same session and the answer is "none, I read them a
 a device?" from `cmd/claim.go` and reports the docs as fine. Several confirmed gaps are
 *only* visible under this constraint — `pvr claim` is undocumented, pvr's env vars live
 in a README, `--runlevel` has zero doc hits. **If a report cites anything outside
-`https://docs.pantavisor.io/development/`, the fence leaked — discard the run and
+`https://docs.pantavisor.io/<VERSION>/`, the fence leaked — discard the run and
 tighten it.**
+
+**Same domain isn't automatically in scope.** `docs.pantavisor.io` serves two very
+different things a run must tell apart: per-page content, and site-wide AI aids.
+
+- The **"Copy page" button** on every page corresponds to a `.md` export at that page's
+  own URL (`<page-url>.md`) — the same article content a human reader sees, just
+  cleaner to fetch and quote, and it's what this pack's own `unlinked`/`broken-path`
+  findings were verified against (article content, not sidebar chrome). Every persona's
+  scope fence (rule 1) tells the run to prefer this over the rendered HTML page.
+- The site also serves a root **`/llms.txt`** — a hand-written agent orientation guide
+  that explains core concepts directly (e.g. "Pantavisor is PID 1... a `state.json`
+  manifest...") and links to bare, non-`/development/` pages. This one is **never** in
+  scope: reading it hands the model the exact conclusions this pack exists to test
+  whether the *docs page a reader actually lands on* gets across. It's excluded
+  explicitly in every persona's scope fence (rule 2), not just implied by the domain
+  rule — this file wouldn't otherwise be caught by "no domain other than
+  `docs.pantavisor.io`," since it *is* that domain.
 
 ### Which version, and why
 
-The live site is versioned. Runs target `/development/` specifically, not the bare
-(stable) URL — the stable version is missing entire sections (`getting-started/` doesn't
-exist there at all, confirmed 2026-07-23) that every persona prompt uses as an entry
-point. `/development/` is the version that's structurally complete. This means these
-runs are evaluating docs-in-progress, not what a visitor sees today with no version
-selected — worth remembering when weighting a finding. If you want to know whether the
-*stable* site is missing whole sections, that's a different, coarser check than anything
-in this pack currently does.
+The live site is versioned, and every persona/prompt uses a `{VERSION}` placeholder
+rather than a hardcoded path so a run can target any published version.
+
+**Default: `development`.** Runs target `/development/` unless told otherwise — not the
+bare (stable) URL. The stable version is missing entire sections (`getting-started/`
+doesn't exist there at all, confirmed 2026-07-23) that every persona prompt uses as an
+entry point; `/development/` is the version that's structurally complete. This means a
+default run is evaluating docs-in-progress, not what a visitor sees today with no
+version selected — worth remembering when weighting a finding.
+
+**Running against a chosen version instead.** Tell the session which version to use
+before it starts — manually, by saying so alongside the pasted persona/prompt; or via
+`RUNBOOK.md`'s invocation contract, with `version=<VERSION>` (e.g.
+`persona=07 prompt=B version=stable`, or a release-candidate tag like `029-rc4`). Every
+`{VERSION}` placeholder in the scope fence and the prompt resolves to that value for the
+whole run.
+
+**Read a non-default run's findings differently.** A gap on `stable` might just be
+`stable` lagging `development`, not a fresh docs defect — the persona/prompt pack itself
+is only verified against `development` (see `ground-truth.md`'s provenance note). If a
+non-`development` run reports a page or section is missing entirely, that's most useful
+as a coarse "how far behind is this version" signal, and worth checking against
+`development` before treating it as a new finding. A non-`development` run is a
+deliberate, separate audit — don't blend it into the regular weekly cadence of
+`development` runs (see `RUNBOOK.md`'s "Suggested cadence").
 
 ### Historical: the `CLAUDE.md` fence leak
 
@@ -134,28 +239,32 @@ Watch for **agreement across personas**. A gap that only persona 4 hits is a per
 question. A gap that 1, 3, and 4 all hit from different directions — as the missing
 Docker→LXC explanation does — is a page that needs to exist.
 
-## Automated runs (Hermes)
+## Automated / unattended runs
 
-[Hermes](https://hermes-agent.nousresearch.com/docs) runs `RUNBOOK.md` on a cron
-schedule, one persona/prompt pair per job, against an installed Claude Code instance
-with this repo checked out. Each run:
+`RUNBOOK.md` is runner-agnostic — anything that can start a cold Claude Code session and
+hand it a fixed trigger prompt can drive it: a [Hermes](https://hermes-agent.nousresearch.com/docs)
+cron schedule, a one-off `claude -p "Follow RUNBOOK.md ... persona=07 prompt=B"`
+invocation, or a CI job. One persona/prompt/version combination per run. Each run:
 
-1. Fetches live, following the scope fence exactly as a manual run would.
-2. Writes a dated report to `reports/persona-<NN>-prompt-<X>-<YYYY-MM-DD>.md`.
-3. Appends a row to `reports/index.md`.
+1. Fetches live, following the scope fence exactly as a manual run would, against
+   whichever `version` the trigger named (`development` if it named none).
+2. Writes a dated report to
+   `answers/<NN>-<persona-slug>/<YYYY-MM-DD>-prompt<X>-<model-slug>-<VERSION>.md`.
+3. Appends a row to `answers/index.md`.
 4. Commits both — but does not push. Whether and where these commits get synced is
    configured outside this repo.
 
-Configuring a job means giving it a fixed trigger prompt naming one persona and one
-prompt letter — see `RUNBOOK.md`'s **Invocation contract** for the exact text. A single
-"run the eval" job with no parameters isn't supported on purpose: fixed pairs are what
-keep runs across weeks comparable.
+Triggering a run means giving it a fixed trigger prompt naming one persona and one
+prompt letter, and optionally a version — see `RUNBOOK.md`'s **Invocation contract** for
+the exact text. A single "run the eval" trigger with no parameters isn't supported on
+purpose: fixed combinations are what keep runs across weeks comparable.
 
-Because each cron firing is a cold Claude Code session, "a fresh session per persona"
-and "one prompt per session" (above) hold automatically — there's no risk of the context
-bleed a human running several personas back-to-back in one chat has to watch for.
+Because each such invocation is a cold Claude Code session, "a fresh session per
+persona" and "one prompt per session" (above) hold automatically — there's no risk of
+the context bleed a human running several personas back-to-back in one chat has to watch
+for.
 
-Read `reports/index.md` over time, not just the latest run: a finding that stops
+Read `answers/index.md` over time, not just the latest run: a finding that stops
 reproducing after a docs change is as informative as a new one, and it's the only way to
 tell a fixed doc from a broken prompt without re-reading every report.
 

@@ -13,11 +13,11 @@ time.
 | **S3** | Friction | I completed it, but a term went undefined or a rationale was missing and I proceeded on assumption. |
 | **S4** | Polish | Inconsistency, stale content, dead index entry, missing frontmatter. Didn't block me. |
 
-The line that matters most is S1 vs S2. If you *found* the answer somewhere on
-`docs.pantavisor.io/development/`, it's S2 at worst — the information exists, the path
-to it doesn't. If the answer is not on the site at all, it's S1. Be strict about this:
-S1 means the documentation does not contain the answer, not that the answer was hard to
-find.
+The line that matters most is S1 vs S2. If you *found* the answer somewhere on the
+version of `docs.pantavisor.io` this run targets, it's S2 at worst — the information
+exists, the path to it doesn't. If the answer is not on that version of the site at all,
+it's S1. Be strict about this: S1 means the documentation does not contain the answer,
+not that the answer was hard to find.
 
 ## Gap taxonomy
 
@@ -44,7 +44,8 @@ One table, most severe first. One row per finding.
 
 Field rules:
 
-- **Location** — the full page URL under `https://docs.pantavisor.io/development/`.
+- **Location** — the full page URL under `https://docs.pantavisor.io/<VERSION>/`, where
+  `<VERSION>` is whatever version this run targets (`development` by default).
   Rendered pages have no line numbers, so pair the URL with the **Evidence** quote below
   to pin down where on the page the claim lives. A finding without a citation is not a
   finding.
