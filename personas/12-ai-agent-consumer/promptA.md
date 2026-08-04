@@ -5,8 +5,8 @@
 
 ## Prompt A — Cold-start journey
 
-> A developer says: *"Read the docs at
-> `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/develop/cli-tools/`
+> A developer says: *"Read the docs starting at
+> `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`
 > and tell me how to deploy my app to my device."* That's all you get. No follow-ups.
 >
 > **Do the task.** Produce the answer you'd actually give — a real, confident,

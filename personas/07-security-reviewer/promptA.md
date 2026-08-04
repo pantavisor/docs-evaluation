@@ -5,7 +5,8 @@
 
 ## Prompt A — Cold-start journey
 
-> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/security`. You have been asked for a
+> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`
+> and go looking from there for the security story. You have been asked for a
 > go/no-go on adopting this, with a written justification, by Friday.
 >
 > Your goal: **build the trust model.** From the roots — secure boot, key custody —

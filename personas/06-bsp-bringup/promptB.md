@@ -21,6 +21,9 @@
 > 4. **When it doesn't work — and it won't, the first six times — how do I debug it?**
 >    Serial console, yes, but what am I looking *at*? What does a healthy boot look like,
 >    so I can spot an unhealthy one? Is there a porting troubleshooting page at all?
+>    Check whether that healthy-boot picture is documented on the runtime's own pages
+>    (`pantavisor/`) as well as meta-pantavisor's BSP docs — a description that only
+>    exists on one side is itself a finding.
 > 5. **Where's the boundary?** At what point does my job end and the container people's
 >    job start? Do the docs ever draw that line, or do they assume one person does both?
 >

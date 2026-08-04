@@ -9,7 +9,9 @@
 > console cable and physical access via a technician who is standing there holding a
 > laptop and doing exactly what you tell him.
 >
-> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/troubleshooting`.
+> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`
+> — the first search result — already scanning it for the fastest way to a
+> troubleshooting page.
 >
 > Your goal: **find out what's wrong and get it back.**
 >

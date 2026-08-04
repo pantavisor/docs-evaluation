@@ -7,7 +7,7 @@
 
 > Your company is considering this for the next product. You've been asked to spend an
 > afternoon on it and come back with a recommendation. You land on
-> `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/overview` because it looked like the front door.
+> `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start` because it's the page literally called Start.
 >
 > Your goal: **answer one question — is this a thing I can adopt, or does it require me
 > to throw away Buildroot and learn Yocto first?**

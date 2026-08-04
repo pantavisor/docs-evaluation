@@ -5,8 +5,9 @@
 
 ## Prompt A — Cold-start journey
 
-> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/overview` — a colleague sent it saying "this
-> is the Yocto layer, you'll get it." Your goal: **decide whether you understand what
+> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`
+> — a colleague sent it saying "start here, this is the Yocto layer, you'll get it."
+> Your goal: **decide whether you understand what
 > this layer would add to your existing Yocto build, well enough to explain it to your
 > team lead tomorrow.**
 >

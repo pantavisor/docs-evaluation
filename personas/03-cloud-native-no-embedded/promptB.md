@@ -17,7 +17,9 @@
 > 3. **The conceptual gap.** Your service is an OCI image. The docs talk about LXC
 >    containers. **Are these the same thing? Can you run your image unmodified?** Answer
 >    only from the docs. If they never address the relationship, say so — that's the
->    finding.
+>    finding. The actual isolation mechanism (LXC, namespaces) is the runtime's, not
+>    the Yocto layer's — check whether `pantavisor/` documents it if
+>    `meta-pantavisor/` doesn't.
 > 4. **The thing you didn't know to ask.** Somewhere in reading, you should discover at
 >    least one thing that invalidates a cloud assumption you didn't know you had. What was
 >    it, and which page told you? If nothing ever did, say that instead — it means the

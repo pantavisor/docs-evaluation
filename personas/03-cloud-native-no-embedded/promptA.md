@@ -6,8 +6,8 @@
 ## Prompt A — Cold-start journey
 
 > You've been handed a device product and told to "get our service running on it." You
-> land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/develop` because you're a developer and
-> that's the developer section.
+> land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`
+> because it's the first link off the docs homepage and you're not about to go hunting.
 >
 > Your goal: **get your containerized service — it's an image in your company's registry,
 > `registry.example.com/team/api:v2.1` — running on one of these devices.**

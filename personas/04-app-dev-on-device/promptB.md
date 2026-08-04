@@ -22,7 +22,9 @@
 >    step 9 is a much worse finding than being told at step 1.
 > 3. **Where does your app image go?** You have an image on Docker Hub. Trace, from the
 >    docs, what happens to it between your registry and the device. Do you understand the
->    mechanism? Does it survive intact?
+>    mechanism? Does it survive intact? That journey crosses from the build-tooling
+>    docs into the runtime's own docs (`pantavisor/`) at some point — say where, or
+>    say it never does.
 > 4. **The bugfix.** Next week's update — what's the command, and what does the device do
 >    while it happens? Does your service go down? Does the whole device reboot?
 >

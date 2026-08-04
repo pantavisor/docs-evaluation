@@ -9,7 +9,8 @@
 > have U-Boot up and a kernel booting from your own BSP layer. Your task from management:
 > "make it run Pantavisor."
 >
-> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/overview/port`.
+> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`
+> and go looking from there for how to port this to new hardware.
 >
 > Your goal: **produce a work estimate.** Not a working board — an *estimate*, in days,
 > that you'd be willing to be held to. That means knowing every step, and knowing what

@@ -10,6 +10,10 @@
 > would be professionally negligent to do otherwise, and the NOT-DOCUMENTED list is
 > exactly what we're measuring.
 >
+> Several of these (signing, device identity, storage) are runtime properties as much
+> as build-layer ones — check `pantavisor/` as well as `meta-pantavisor/` before
+> writing NOT DOCUMENTED.
+>
 > Cover, with a citation or a NOT DOCUMENTED for each:
 >
 > 1. **Root of trust.** Where does it start? Secure boot? Whose keys, held where, rotated

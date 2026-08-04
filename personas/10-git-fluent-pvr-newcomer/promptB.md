@@ -24,7 +24,9 @@
 > to go hunting? **Could you have chosen correctly without leaving the `cli-tools/`
 > pages?** If either flag isn't mentioned on this page at all, say so plainly instead of
 > forcing an answer — a flag control mechanism that governs container startup order and
-> isn't documented at the command that sets it is, itself, the finding.
+> isn't documented at the command that sets it is, itself, the finding. Also check the
+> runtime's own reference docs (`pantavisor/`) for the state-format definition of these
+> fields — not just the `cli-tools/` pages.
 >
 > **Task 4 — the CI job.** A colleague's script uses a flag your docs don't mention. You
 > search for it and find nothing. **What do you do?** How long before you conclude the

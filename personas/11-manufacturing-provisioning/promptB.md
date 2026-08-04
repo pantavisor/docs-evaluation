@@ -22,6 +22,8 @@
 >    later?** Is there a per-unit artifact — a code, a challenge, a token — that has to be
 >    captured, printed on a label, or handed to the customer? Follow this to a runnable
 >    command. If the trail ends at a description with no command, say precisely where.
+>    Claiming and device identity are runtime concepts — check `pantavisor/` as well as
+>    meta-pantavisor's operate/device-access pages before saying the trail ends.
 > 4. **Time per unit.** Add it up. Where's the long pole? Is there a per-unit step that
 >    can't be parallelised?
 > 5. **Failure and rework.** A unit fails at test. Can you reflash and re-provision it, or

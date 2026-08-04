@@ -25,6 +25,10 @@
 > 6. **Staged rollout.** Can you do 1% → 10% → 100% with an abort? If the docs don't say,
 >    that's a finding, and for your fleet it may be a blocking one.
 >
+> Questions 1–3 are runtime mechanics, not migration-guide content — if the `migrate`
+> page doesn't answer them, follow the trail into `pantavisor/` before recording an
+> absence.
+>
 > Be rigorous about S1 vs S2 (see `../../rubric.md`): if the answer exists somewhere in the
 > three trees but the migrate page never leads you there, that's a `broken-path` detour,
 > not a missing answer. Both matter; they get fixed differently.

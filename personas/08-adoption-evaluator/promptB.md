@@ -21,7 +21,9 @@
 > 4. **Time to first value.** From today to a prototype on real hardware doing something
 >    demonstrable — days or months? What's the longest pole?
 > 5. **Limits.** Where do the docs admit this *isn't* the right tool? Find that page. Do
->    you believe it, or does it read as a formality?
+>    you believe it, or does it read as a formality? Check both `meta-pantavisor/` and
+>    `pantavisor/` before concluding a limit isn't documented — the runtime and the
+>    build layer each publish their own docs.
 > 6. **Maturity.** Who else runs this, at what scale, for how long? Is there any evidence
 >    in the docs, or only assertion?
 >

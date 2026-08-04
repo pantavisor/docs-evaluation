@@ -24,6 +24,9 @@
 > 4. **"Explain how my Docker image ends up running on the device."** Trace the mechanism
 >    through the docs. Where it isn't documented, say what you'd have filled in from
 >    general container knowledge, and whether that fill-in would have been correct here.
+>    Also check `pantavisor/` for its side of that mechanism, separate from
+>    `meta-pantavisor/` — this persona's whole point is measuring the link graph
+>    between them.
 >
 > For each: **the answer you'd have given** vs **what was actually documented**. The
 > delta is the finding.

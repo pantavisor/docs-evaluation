@@ -10,7 +10,9 @@
 >
 > 1. **Device is up but the app isn't running.** How do you see what's running? What's the
 >    equivalent of `docker ps` / `systemctl status`? How do you see its logs? How do you
->    restart just the app?
+>    restart just the app? Check whether the runtime's own docs (`pantavisor/`) cover
+>    this as directly as meta-pantavisor's operate/ pages do — you'd take whichever
+>    answers faster at 2am.
 > 2. **Device is unreachable over the network.** You have serial. What do you type to find
 >    out what's going on? What does a healthy boot look like so you can spot a bad one?
 > 3. **Last update broke it.** How do you find out what version it's on, what it was on

@@ -5,8 +5,9 @@
 
 ## Prompt A — Cold-start journey
 
-> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/migrate` — specifically the page for
-> your current tool (pick `mender`, or `rauc` if you prefer).
+> You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`
+> and go looking from there for how migrating off your current tool works (pick
+> `mender`, or `rauc` if you prefer).
 >
 > Your goal: **decide whether the update mechanism here is one you'd trust with 40,000
 > devices**, and be able to defend that answer to a room that includes your CTO and the

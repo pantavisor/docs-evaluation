@@ -6,8 +6,8 @@
 ## Prompt A — Cold-start journey
 
 > You land on
-> `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/develop/cli-tools/pvr-cli`.
-> Someone told you "it's git for device state."
+> `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`.
+> Someone told you "it's git for device state, start there."
 >
 > Your goal: **understand the data model well enough to be trusted with a production
 > device.** Not the commands — the model. You are the kind of engineer who won't run a

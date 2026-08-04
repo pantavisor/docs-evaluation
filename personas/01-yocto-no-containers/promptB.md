@@ -20,6 +20,10 @@
 >    to add it "from a Docker image." **What is a Docker image, in terms you know, and
 >    what has to be true of your app for that to work?** Answer only from the docs.
 > 4. What does this cost you — flash, RAM, boot time, build time?
+> 5. The docs describe the update from the Yocto/meta-pantavisor side. Trace what
+>    actually happens on-device when that update lands — the revision/state mechanism
+>    — into the `pantavisor/` runtime docs. Does what you find there change your
+>    answer to (2)?
 >
 > Where the docs don't answer, don't fill the gap from general knowledge. Record it and
 > state plainly what you'd have had to guess. Report against `../../rubric.md`.

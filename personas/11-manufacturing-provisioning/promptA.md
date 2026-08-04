@@ -6,8 +6,8 @@
 ## Prompt A — Cold-start journey
 
 > You've been sent a spec for a new product built on this platform and asked to quote the
-> flashing station. You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/how-to-install`
-> because that's where images get put on hardware.
+> flashing station. You land on `https://docs.pantavisor.io/{VERSION}/meta-pantavisor/getting-started/start`
+> and go looking from there for where images get put on hardware.
 >
 > Your goal: **quote the line.** Seconds per unit, equipment needed, and — critically —
 > whether the station needs network access to the internet, which is a security and cost
